@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.css" />
+                 <script src="angular/angular.js"></script>
+          
+                 <link rel="stylesheet" type="text/css" href="ex2.css"/>
+                 <script type="text/javascript" src="ayujs.js"></script>
+
+	       
+                      <script src="jquery/dist/jquery.js"></script>
+    
+      <script src="bootstrap/dist/js/bootstrap.js"></script>
+        
+    </head>
+    <body>
+ 
+<script>
+
+var count=0;
+var seats=[];
+var subtotal=0;
+var seatclass="";
+var amount=0;
+var fees=0;
+var bookedSeats=[];
+
+
+$(document).ready(function(){
+var sclass=sessionStorage.getItem("Class");
+var mdate=sessionStorage.getItem("Moviedate");
+var nseats=sessionStorage.getItem("NoofSeats");
+
+//Upper Date tab Click event
+// $("ul.nav-pills>li").click(function() {
+//     $(this).siblings('li.active').removeClass("active");
+//     $(this).addClass("active");
+//     var str=$(this).children("a")[0].innerHTML;
+//     sessionStorage.setItem("Moviedate", str.substring(51,str.length));
+//     location.reload();
+// });
+
+$("ul.nav-pills>li").click(function(){
+  alert("ok");
+});
+
+//Makepayment button Click
+$("#ProceedPaymentButton").click(function(){
+  sessionStorage.setItem("JsonSeatNos",JSON.stringify(seats));
+  sessionStorage.setItem("SeatNos",seats);
+  sessionStorage.setItem("Subtotal",subtotal);
+  sessionStorage.setItem("Amt",amount);
+});
+
+
+//Change No of Seats from upper dropdown
+
+
+
+
+$("#SeatCount").change(function(){
+  nseats=$("#SeatCount option:selected").text();
+  clearSelection();
+});
+
+//Set No of Seats in Upper dropdown
+$("#SeatCount option[value="+nseats+"]").prop('selected', true);
+//value show in booking summary
+
+document.getElementById("seatclass").innerHTML=sclass;
+
+//Set Movie Date in Upper tabs
+$("ul.nav-pills>li").siblings('li.active').removeClass("active");
+$("ul.nav-pills>li:contains("+mdate+")").addClass("active");
+
+//Enable / Disable Section based on seat class
+if(sclass=="PLATINUM"){
+  $('#SILVER img, #GOLD img').attr('src','assets/Images/R_chair.gif')
+}
+if(sclass=="GOLD"){
+  $('#SILVER img, #PLATINUM img').attr('src','assets/Images/R_chair.gif')
+}
+if(sclass=="SILVER"){
+  $('#GOLD img, #PLATINUM img').attr('src','assets/Images/R_chair.gif')
+}
+
+
+
+
+//Seat image Click event
+$("img").click(function(){
+    var id = $(this).attr('id');
+    var path = $('#'+id).attr('src');
+    var x=path.substring(path.lastIndexOf('W'),path.length);
+    var y=path.substring(path.lastIndexOf('i'),path.length);
+        if(x=="W_chair.gif")
+        {
+          if(count<nseats){
+          $('#'+id).attr('src','assets/Images/imag17.jpg');
+          count++;
+          seats.push(id);
+          }
+          else {
+            alert('You have already selected '+ nseats +' seat(s)');
+          }
+
+        }
+        else if(y=="imag17.jpg")
+        {
+        $('#'+id).attr('src','assets/Images/W_chair.gif');
+        if(count!=0){
+        var ind=seats.indexOf(id);
+        seats.splice(ind,1);
+        count--;
+        }
+      }
+        subtotal=count*220;
+        fees=subtotal*8/100;
+        amount=subtotal+fees;
+        seats.sort();
+        document.getElementById("seatcount").innerHTML=count;
+        document.getElementById("seatno").innerHTML=seats;
+        document.getElementById("subtotal").innerHTML=subtotal;
+        document.getElementById("fees").innerHTML=fees;
+        document.getElementById("amount").innerHTML='Rs. '+amount;
+
+      });
+
+      //Clear function to clear seat selection
+      function clearSelection(){
+        for(i=0;i<seats.length;i++){
+          $('#'+seats[i]).attr('src','assets/Images/W_chair.gif');
+        }
+        count=0;
+        subtotal=0;
+        seats=[];
+        fees=0;
+        amount='Rs. '+0;
+        document.getElementById("seatno").innerHTML=seats;
+        document.getElementById("subtotal").innerHTML=subtotal;
+        document.getElementById("seatcount").innerHTML=count;
+        document.getElementById("fees").innerHTML=fees;
+        document.getElementById("amount").innerHTML=amount;
+      }
+
+      //Calling clearSelection function on click event of clear button
+      $("#clearbtn").click(clearSelection);
+
+      $("#link1").click(function(){
+        alert(sessionStorage.getItem("Moviedate"));
+      });
+
+      //Function to disable booked seats
+      window.disableSeats=function(){
+        for(var a=0;a<bookedSeats.length;a++){
+          for(var b=0;b<bookedSeats[a].Seats.length;b++){
+            var id=window.bookedSeats[a].Seats[b];
+            $('#'+id).attr('src','assets/Images/R_chair.gif');
+          }
+        }
+      }
+
+  });
+  </script>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+
+      </div>
+    </div>
+     <br/>
+
+        <div class="row">
+
+
+          <div class="col-lg-4">
+            <label>No. of Seats</label>&nbsp;
+            <select id="SeatCount">
+            <option>No
+            of seats to be selected:</option>
+              <option>1</option><option>2</option>
+              <option>3</option><option>4</option>
+              <option>5</option><option>6</option>
+              <option>7</option><option>8</option>
+
+            </select>
+
+          </div>
+        </div>
+        <br/>
+        <div class="row">
+        <div class="col-lg-8">
+      <div>
+        <table align="center" class="table table-default" id="table1">
+          <tr>
+              <td style="text-align: center">&nbsp;</td>
+              <td colspan="13" style="text-align: right"><button id="clearbtn" type="button" class="btn btn-default glyphicon glyphicon-refresh"> Clear Selection</button></td>
+          </tr>
+          <tr>
+                  <td style="text-align: center">&nbsp;</td>
+                
+              </tr>
+              <tr>
+              <td>
+                      &nbsp;</td>
+                  <td>
+                      1</td>
+                  <td>
+                      2</td>
+                  <td>
+                      3</td>
+                  <td>
+                      4</td>
+                  <td>
+                      5</td>
+                  <td>
+                      6</td>
+                  <td>
+                      7</td>
+                  <td>
+                      8</td>
+                  <td>
+                      9</td>
+                  <td>
+                      10</td>
+                  <td>
+                      11</td>
+                  <td>
+                      12</td>
+                  <td>
+                      13</td>
+                  <td>
+                      14</td>
+                  <td>
+                      15</td>
+                  <td>
+                      16</td>
+                  <td>
+                      17</td>
+                  
+                  
+              </tr>
+              <tbody id="PLATINUM">
+              <tr>
+                  <td>
+                      A</td>
+
+                  <td>
+                      <img alt="" id="A1" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A2" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A3" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A4" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A5" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A6" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A7" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                       <td>
+                      <img alt="" id="A8" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A9" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A10" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A11" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A12" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A13" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A14" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A15" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="A16" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                      <td>
+                      <img alt="" id="A17" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                
+
+              </tr>
+              <tr>
+                  <td>
+                      B</td>
+                  <td>
+                      &nbsp;</td>
+                                        <td>
+                      <img alt="" id="B3" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B4" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B5" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B6" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B7" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B8" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B9" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B10" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B11" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B12" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B13" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B14" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                      <td>
+                      <img alt="" id="B15" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B16" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B17" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="B18" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>&nbsp;</td>
+              </tr></tbody>
+                <tbody id="GOLD">
+              <tr>
+                  <td style="text-align: left">
+                      &nbsp;</td>
+                 
+                      </tr>
+              <tr>
+                  <td>
+                      C</td>
+                  <td>
+                      <img alt="" id="C1" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C2" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C3" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C4" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C5" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C6" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C7" src="aimages/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C8" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C9" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C10" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C11" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C12" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C13" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                    <td>
+                      <img alt="" id="C14" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C15" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C16" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="C17" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                
+              </tr>
+              <tr>
+                  <td>
+                      D</td>
+                  <td>
+                      <img alt="" id="D1" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D2" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D3" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D4" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D5" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D6" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D7" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D8" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D9" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D10" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D11" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D12" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D13" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                    <td>
+                      <img alt="" id="D14" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D15" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D16" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="D17" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                 
+              </tr>
+              <tr>
+                  <td>
+                      E</td>
+
+                  <td>
+                      <img alt="" id="E2" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E3" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E4" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E5" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E6" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E7" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E8" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E9" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E10" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E11" src="imagesW_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E12" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E13" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                    <td>
+                      <img alt="" id="E14" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E15" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E16" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E17" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  <td>
+                      <img alt="" id="E18" src="images/W_chair.gif" style="width: 17px; height: 17px" /></td>
+                  
+
+              </tr>
+              </tbody>
+
+                         
+              <tr>
+                  <td>
+                      &nbsp;</td>
+                  <td colspan="25" align="center">
+                      <img alt="" src="assets/Images/screen.jpg" />
+                    </td>
+              </tr>
+          </table>
+      </div>
+</div>
+<div class="col-lg-4">
+  <div class="well">
+        <table class="table table-default" style="table-layout:fixed">
+          <thead>
+          <tr>
+            <td colspan="2"><h3 style="letter-spacing:4px">Booking Summary</h3></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span>No. of seat selected</span></td>
+            <td style="text-align:right"><span id="seatcount">0</span></td>
+          </tr>
+          <tr>
+
+          <tr>
+            <td>Seat No</td>
+            <td style="word-wrap:break-word; text-align:right"><span id="seatno"></span></td>
+          </tr>
+          <tr>
+            <td>Sub Total</td>
+            <td style="text-align:right"><span id="subtotal">0</span></td>
+          </tr>
+          <tr>
+            <td>Internet Service Charge</td>
+            <td style="text-align:right"><span id="fees">0</span></td>
+          </tr>
+          <tr>
+            <td>Amount To Pay</td>
+            <td style="text-align:right; font-weight:bold; font-size:20px"><span id="amount">Rs. 0</span></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <br/><br/><a href="/payment" id="ProceedPaymentButton" class="btn btn-success btn-lg btn-block">Proceed to Payment</a>
+            </td>
+          </tr>
+        </tbody>
+        </table>
+      </div>
+</div>
+</div>
+</div>
+  
+
+    </body>
+</html>

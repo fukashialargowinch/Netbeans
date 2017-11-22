@@ -1,0 +1,35 @@
+.fcontainer{
+    background-color: skyblue;
+}
+h1{
+    color: green;
+}
+#cola,#cola1,#cola2,#colb,#colb1,#colb2,#colc,#colc1,#colc2{
+   background-color:dimgrey;
+}
+p {
+  overflow:scroll;
+  overflow-y: auto;
+  overflow-x: auto;
+  height:100px;
+  width:190px;
+  text-align: center;
+}
+.imagessrc{
+    width:200px; height:150px 
+}
+#cola1,#colb1,#colc1{
+        margin-left: -45px;
+}
+#cola2,#colb2,#colc2{
+    margin-left: -49px;
+}
+#lin1{
+        margin-left: 212px;
+}
+#lin2{
+        margin-left: 190px;
+}
+#lin3{
+        margin-left: 215px;
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <servlet>
+        <servlet-name>valid</servlet-name>
+        <servlet-class>valid.valid</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ss</servlet-name>
+        <servlet-class>valid.ss</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>in</servlet-name>
+        <servlet-class>in</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>valid</servlet-name>
+        <url-pattern>/valid.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ss</servlet-name>
+        <url-pattern>/ss.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>in</servlet-name>
+        <url-pattern>/in.do</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>

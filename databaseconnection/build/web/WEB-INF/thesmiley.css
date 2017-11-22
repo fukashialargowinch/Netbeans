@@ -1,0 +1,20 @@
+
+
+    @font-face {
+    font-family: myFirstFont;
+    src: url(Alexxis.ttf);
+}
+
+      h1{
+           font-family: myFirstFont;
+      }
+       @font-face {
+    font-family: FirstFont;
+    src: url(mainheading.ttf);
+      
+}
+
+     p{
+           font-family: FirstFont;
+            font-size: large;
+      }
